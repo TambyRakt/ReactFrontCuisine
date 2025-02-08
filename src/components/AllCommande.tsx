@@ -8,6 +8,12 @@ const AllCommande = () => {
   const { commandes } = useContext(CartContext);
 
   const renderCommande = ({ item }: { item: Commande }) => {
+    // Calcul du montant total de la commande
+    const total = item.items.reduce(
+      (acc, entry) => acc + entry.item.prix * entry.quantity,
+      0
+    );
+
     return (
       <View style={styles.commandeItem}>
         <Text style={styles.commandeDate}>
@@ -18,6 +24,9 @@ const AllCommande = () => {
             {entry.item.name} — {entry.quantity} x {entry.item.prix}€
           </Text>
         ))}
+        <Text style={styles.commandeTotal}>
+          Montant total: {total.toFixed(2)}€
+        </Text>
       </View>
     );
   };
@@ -58,11 +67,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: "#fff",
   },
-  commandeId: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: Colors.text,
-  },
   commandeDate: {
     fontSize: 14,
     color: Colors.textSecondary,
@@ -70,6 +74,12 @@ const styles = StyleSheet.create({
   },
   commandeItemText: {
     fontSize: 14,
+    color: Colors.text,
+  },
+  commandeTotal: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginTop: 8,
     color: Colors.text,
   },
   emptyText: {
