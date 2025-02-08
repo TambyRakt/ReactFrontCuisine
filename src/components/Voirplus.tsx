@@ -1,5 +1,5 @@
 // Voirplus.tsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -11,6 +11,9 @@ import {
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { RootStackParamList } from "../../app/index"; // Adaptez le chemin d'import
 import Colors from "../config/Color";
+import { getPlatById } from "../service/PlatService";
+import { PlatData } from "../data/Image";
+
 
 // Type pour la route
 type VoirplusRouteProp = RouteProp<RootStackParamList, "Voirplus">;
@@ -18,6 +21,13 @@ type VoirplusRouteProp = RouteProp<RootStackParamList, "Voirplus">;
 const Voirplus = () => {
   const route = useRoute<VoirplusRouteProp>();
   const { item } = route.params;
+  const [plats, setPlats] = useState<PlatData[]>([]); // Mamor
+  useEffect(()=>{
+    getPlatById(item.id).then((data: any)=>{
+      setPlats(data);
+    })
+  },[])
+
 
   return (
     <ScrollView style={styles.container}>
@@ -25,7 +35,7 @@ const Voirplus = () => {
       <View style={styles.detailsContainer}>
         <Text style={styles.name}>{item.name}</Text>
         <Text style={styles.prix}>{item.prix} €</Text>
-        <Text style={styles.description}>{item.description}</Text>
+        <Text>Temps cuisson:{item.tempscuisson} sec</Text>
         <Text style={styles.ingredientsTitle}>Ingrédients :</Text>
         {item.ingredients.map((ingredient, index) => (
           <Text key={index} style={styles.ingredient}>

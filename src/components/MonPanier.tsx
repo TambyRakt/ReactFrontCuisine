@@ -1,5 +1,5 @@
 // MonPanier.tsx
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,19 +7,66 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import Colors from "../config/Color";
-import { CartContext } from "../context/CardContext"; // Vérifiez le chemin si besoin
+import { CartContext, Commande } from "../context/CardContext";
 import { PlatData } from "../../app/index";
 import { Ionicons } from "@expo/vector-icons";
+// Import du hook de navigation et des types
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../../app/index"; // Ajustez le chemin en fonction de votre arborescence
+import { getAllPanier } from "../service/PlatService";
+
+// Définition du type pour la navigation
+type MonPanierScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "MonPanier"
+>;
 
 const MonPanier = () => {
-  const { cart, removeFromCart } = useContext(CartContext);
-  // Stockage local des quantités pour chaque item (indexé par l'index de l'item)
+  const { cart, removeFromCart, addCommande } = useContext(CartContext);
   const [quantities, setQuantities] = useState<{ [key: number]: string }>({});
+  const navigation = useNavigation<MonPanierScreenNavigationProp>();
+  const [plats, setPlats] = useState<PlatData[]>([]);
+
+  useEffect(() => {
+    getAllPanier().then((data: any) => {
+      setPlats(data);
+    });
+  }, []);
+
+  const handleOrder = () => {
+    if (cart.length === 0) {
+      Alert.alert("Erreur", "Votre panier est vide !");
+      return;
+    }
+
+    // Construire la commande à partir des items du panier et des quantités saisies
+    const itemsCommande = cart.map((item, index) => {
+      const quantityStr = quantities[index] || "1";
+      const quantity = parseInt(quantityStr, 10) || 1;
+      return { item, quantity };
+    });
+
+    const newCommande: Commande = {
+      id: Date.now(), // Utilisation d'un timestamp comme identifiant
+      items: itemsCommande,
+      date: new Date(),
+    };
+
+    // Ajout de la commande via le contexte
+    addCommande(newCommande);
+
+    // Afficher une alerte de confirmation
+    Alert.alert("Commande", "Votre commande a été passée !");
+
+    // Navigation vers la page AllCommande
+    navigation.navigate("AllCommande");
+  };
 
   const renderItem = ({ item, index }: { item: PlatData; index: number }) => {
-    // Par défaut, si aucune quantité n'est saisie, on affiche "1"
     const quantity = quantities[index] || "1";
 
     return (
@@ -56,7 +103,13 @@ const MonPanier = () => {
         ListEmptyComponent={
           <Text style={styles.emptyText}>Votre panier est vide</Text>
         }
+        contentContainerStyle={{ flexGrow: 1 }}
       />
+      {cart.length > 0 && (
+        <TouchableOpacity style={styles.orderButton} onPress={handleOrder}>
+          <Text style={styles.orderButtonText}>Commander</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -115,6 +168,18 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 16,
     color: Colors.textSecondary,
+  },
+  orderButton: {
+    backgroundColor: Colors.primary,
+    padding: 16,
+    borderRadius: 8,
+    alignItems: "center",
+    marginVertical: 16,
+  },
+  orderButtonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
 
