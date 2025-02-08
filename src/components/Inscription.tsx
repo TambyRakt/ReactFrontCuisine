@@ -30,7 +30,7 @@ const Inscription = () => {
     }
     console.log("Inscription avec", nom, email, password);
     Alert.alert("Inscription réussie", "Bienvenue !", [
-      { text: "OK", onPress: () => navigation.navigate("ListeDesPlats") },
+      { text: "OK", onPress: () => navigation.navigate("ListeDesPlats" ) },
     ]);
   };
 

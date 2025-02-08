@@ -35,7 +35,7 @@ const Voirplus = () => {
       <View style={styles.detailsContainer}>
         <Text style={styles.name}>{item.name}</Text>
         <Text style={styles.prix}>{item.prix} €</Text>
-        <Text>Temps cuisson:{item.tempscuisson} sec</Text>
+        <Text  style={styles.description}>Temps cuisson:{item.tempscuisson} sec</Text>
         <Text style={styles.ingredientsTitle}>Ingrédients :</Text>
         {item.ingredients.map((ingredient, index) => (
           <Text key={index} style={styles.ingredient}>
