@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import{ListeDesPlats} from "../components/ListeDesPlats";
+import{ListeDesPlats} from "./ListeDesPlats";
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import Colors from "../config/Color";
+import Colors from "../src/config/Color";
 
 const SeConnecter = () => {
   const [email, setEmail] = useState("");

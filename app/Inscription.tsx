@@ -8,8 +8,8 @@ import {
   Alert,
 } from "react-native";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
-import { RootStackParamList } from "../../app/index"; // Ajustez le chemin d'import
-import Colors from "../config/Color";
+import { RootStackParamList } from "../app/index"; // Ajustez le chemin d'import
+import Colors from "../src/config/Color";
 
 const Inscription = () => {
   const [nom, setNom] = useState("");

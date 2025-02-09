@@ -8,14 +8,14 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import Colors from "../config/Color";
+import Colors from "../src/config/Color";
 import { LinearGradient } from "expo-linear-gradient";
-import { getPlats } from "../data/Image";
+import { getPlats } from "../src/data/Image";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList, PlatData } from "../../app/index";
+import { RootStackParamList, PlatData } from "../app/index";
 import { Ionicons } from "@expo/vector-icons";
-import { CartContext } from "../context/CardContext";
+import { CartContext } from "../src/context/CardContext";
 import Checkbox from "expo-checkbox"; // Assurez-vous d'avoir installé expo-checkbox
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, "ListeDesPlats">;
