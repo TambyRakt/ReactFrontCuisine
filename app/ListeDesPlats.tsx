@@ -24,6 +24,7 @@ export const ListeDesPlats = () => {
   const [search, setSearch] = useState("");
   const navigation = useNavigation<NavigationProp>();
   const { addToCart } = useContext(CartContext);
+  console.log("🧐 CartContext:", { addToCart })
   const [plats, setPlats] = useState<PlatData[]>([]);
   // États pour le tri
   const [sortMin, setSortMin] = useState(false);
@@ -38,14 +39,25 @@ export const ListeDesPlats = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={() => navigation.navigate("MonPanier")}>
+        <>
+          <TouchableOpacity onPress={() => navigation.navigate("MonPanier")}>
+            <Ionicons
+              name="cart"
+              size={24}
+              color={Colors.cardBackground}
+              style={{ marginRight: 16 }}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigation.navigate("AllCommande")}>
           <Ionicons
-            name="cart"
+            name="bag"
             size={24}
             color={Colors.cardBackground}
             style={{ marginRight: 16 }}
           />
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </>
       ),
     });
   }, [navigation]);
@@ -135,8 +147,9 @@ export const ListeDesPlats = () => {
                   <TouchableOpacity
                     style={styles.buttonAcheter}
                     onPress={() => {
-                      addToCart(item);
-                      navigation.navigate("MonPanier");
+                      addToCart(item).then((data) => {
+                        navigation.navigate("MonPanier");
+                      });
                     }}
                   >
                     <Text style={styles.buttonText}>Acheter</Text>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import{ListeDesPlats} from "./ListeDesPlats";
 import {
   View,
@@ -11,10 +11,16 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../src/config/Color";
 
+import { login } from "@/src/service/LoginService";
+import { CartContext } from "@/src/context/CardContext";
+
 const SeConnecter = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [ invalidCredentials, setInvalidCredentials ] = useState(false)
   const navigation = useNavigation();
+
+  const { setCart } = useContext(CartContext);
 
   const handleLogin = () => {
     if (!email || !password) {
@@ -22,8 +28,16 @@ const SeConnecter = () => {
       return;
     }
     console.log("Connexion avec", email, password);
+
+    login(email, password).then(() => {
+      navigation.navigate("ListeDesPlats");
+    }).catch((err) => {
+      setInvalidCredentials(true)
+    });
+
+    setCart([])
+
     // Navigation vers ListeDesPlats après connexion réussie
-    navigation.navigate("ListeDesPlats");
   };
 
   return (
@@ -46,6 +60,9 @@ const SeConnecter = () => {
         value={password}
         onChangeText={setPassword}
       />
+
+      { invalidCredentials && <Text style={styles.error}>Email ou mot de passe invalide</Text>}
+
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Connexion</Text>
       </TouchableOpacity>
@@ -99,6 +116,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
   },
+  error: {
+    color: Colors.danger,
+  }
 });
 
 export default SeConnecter;

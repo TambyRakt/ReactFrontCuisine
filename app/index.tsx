@@ -4,12 +4,12 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 // Import des écrans
-import SeConnecter from "../src/components/SeConnecter";
-import Inscription from "../src/components/Inscription";
-import ListeDesPlats from "../src/components/ListeDesPlats";
-import Voirplus from "../src/components/Voirplus";
-import MonPanier from "../src/components/MonPanier";
-import AllCommande from "../src/components/AllCommande";
+import SeConnecter from "./SeConnecter";
+import Inscription from "./Inscription";
+import ListeDesPlats from "./ListeDesPlats";
+import Voirplus from "./Voirplus";
+import MonPanier from "./MonPanier";
+import AllCommande from "./AllCommande";
 import Colors from "../src/config/Color";
 import { CartProvider } from "../src/context/CardContext";
 

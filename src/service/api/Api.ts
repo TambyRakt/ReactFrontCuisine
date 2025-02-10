@@ -6,7 +6,7 @@ function getLocalAccesToken() {
 	return accessToken;
 }
 
-const localUrl : any = "http://localhost:8000";
+const localUrl : any = "https://jeu-production-2a49.up.railway.app";
 
 const axiosInstance : any = axios.create({
 	baseURL: localUrl,
@@ -30,7 +30,7 @@ axiosInstance.interceptors.response.use((res : any) => {
 	return res;
 }, async (err : any) => {
 	const originalConfig : any = err.config;
-
+	
 	if (originalConfig.url != '/api/v1/login_check' && err.response) {
 		// Refresh token
 		

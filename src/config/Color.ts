@@ -11,6 +11,7 @@ const Colors = {
     cardBackground: "#FFFFFF", // Fond des cartes en blanc pour un contraste propre
     shadow: "rgba(0, 0, 0, 0.1)", // Ombre douce pour les cartes
     placeholder: "#7D7D7D",
+    danger: '#FF0000'
   };
   
   export default Colors;

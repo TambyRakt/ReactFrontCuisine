@@ -26,15 +26,12 @@ type MonPanierScreenNavigationProp = StackNavigationProp<
 >;
 
 const MonPanier = () => {
-  const { cart, removeFromCart, addCommande } = useContext(CartContext);
+  const { cart, removeFromCart, addCommande, getUserCart } = useContext(CartContext);
   const [quantities, setQuantities] = useState<{ [key: number]: string }>({});
   const navigation = useNavigation<MonPanierScreenNavigationProp>();
-  const [plats, setPlats] = useState<PlatData[]>([]);
 
   useEffect(() => {
-    getAllPanier().then((data: any) => {
-      setPlats(data);
-    });
+    getUserCart()
   }, []);
 
   const handleOrder = () => {
