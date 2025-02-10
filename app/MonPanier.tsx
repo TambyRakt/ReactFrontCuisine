@@ -9,15 +9,15 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import Colors from "../config/Color";
-import { CartContext, Commande } from "../context/CardContext";
-import { PlatData } from "../../app/index";
+import Colors from "../src/config/Color";
+import { CartContext, Commande } from "../src/context/CardContext";
+import { PlatData } from "../app/index";
 import { Ionicons } from "@expo/vector-icons";
 // Import du hook de navigation et des types
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "../../app/index"; // Ajustez le chemin en fonction de votre arborescence
-import { getAllPanier } from "../service/PlatService";
+import { RootStackParamList } from "../app/index"; // Ajustez le chemin en fonction de votre arborescence
+import { getAllPanier } from "../src/service/PlatService";
 
 // Définition du type pour la navigation
 type MonPanierScreenNavigationProp = StackNavigationProp<
@@ -26,15 +26,12 @@ type MonPanierScreenNavigationProp = StackNavigationProp<
 >;
 
 const MonPanier = () => {
-  const { cart, removeFromCart, addCommande } = useContext(CartContext);
+  const { cart, removeFromCart, addCommande, getUserCart } = useContext(CartContext);
   const [quantities, setQuantities] = useState<{ [key: number]: string }>({});
   const navigation = useNavigation<MonPanierScreenNavigationProp>();
-  const [plats, setPlats] = useState<PlatData[]>([]);
 
   useEffect(() => {
-    getAllPanier().then((data: any) => {
-      setPlats(data);
-    });
+    getUserCart()
   }, []);
 
   const handleOrder = () => {

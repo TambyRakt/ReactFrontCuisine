@@ -8,14 +8,14 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import Colors from "../config/Color";
+import Colors from "../src/config/Color";
 import { LinearGradient } from "expo-linear-gradient";
-import { getPlats } from "../data/Image";
+import { getPlats } from "../src/data/Image";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList, PlatData } from "../../app/index";
+import { RootStackParamList, PlatData } from "../app/index";
 import { Ionicons } from "@expo/vector-icons";
-import { CartContext } from "../context/CardContext";
+import { CartContext } from "../src/context/CardContext";
 import Checkbox from "expo-checkbox"; // Assurez-vous d'avoir installé expo-checkbox
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, "ListeDesPlats">;
@@ -24,6 +24,7 @@ export const ListeDesPlats = () => {
   const [search, setSearch] = useState("");
   const navigation = useNavigation<NavigationProp>();
   const { addToCart } = useContext(CartContext);
+  console.log("🧐 CartContext:", { addToCart })
   const [plats, setPlats] = useState<PlatData[]>([]);
   // États pour le tri
   const [sortMin, setSortMin] = useState(false);
@@ -38,14 +39,25 @@ export const ListeDesPlats = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={() => navigation.navigate("MonPanier")}>
+        <>
+          <TouchableOpacity onPress={() => navigation.navigate("MonPanier")}>
+            <Ionicons
+              name="cart"
+              size={24}
+              color={Colors.cardBackground}
+              style={{ marginRight: 16 }}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigation.navigate("AllCommande")}>
           <Ionicons
-            name="cart"
+            name="bag"
             size={24}
             color={Colors.cardBackground}
             style={{ marginRight: 16 }}
           />
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </>
       ),
     });
   }, [navigation]);
@@ -135,8 +147,9 @@ export const ListeDesPlats = () => {
                   <TouchableOpacity
                     style={styles.buttonAcheter}
                     onPress={() => {
-                      addToCart(item);
-                      navigation.navigate("MonPanier");
+                      addToCart(item).then((data) => {
+                        navigation.navigate("MonPanier");
+                      });
                     }}
                   >
                     <Text style={styles.buttonText}>Acheter</Text>

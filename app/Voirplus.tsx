@@ -9,10 +9,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { RouteProp, useRoute } from "@react-navigation/native";
-import { RootStackParamList } from "../../app/index"; // Adaptez le chemin d'import
-import Colors from "../config/Color";
-import { getPlatById } from "../service/PlatService";
-import { PlatData } from "../data/Image";
+import { RootStackParamList } from "../app/index"; // Adaptez le chemin d'import
+import Colors from "../src/config/Color";
+import { getPlatById } from "../src/service/PlatService";
+import { PlatData } from "../src/data/Image";
 
 
 // Type pour la route

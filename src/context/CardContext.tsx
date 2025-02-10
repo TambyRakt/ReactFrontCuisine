@@ -1,7 +1,7 @@
 // src/context/CartContext.tsx
 import React, { createContext, useState, ReactNode } from "react";
 import { PlatData } from "../../app/index";
-import { addpanier, addCommande as serviceAddCommande } from "../service/PlatService";
+import { addpanier, addCommande as serviceAddCommande, getAllPanier, getAllCommande } from "../service/PlatService";
 
 // Définition du type Commande
 export interface Commande {
@@ -13,18 +13,24 @@ export interface Commande {
 
 type CartContextType = {
   cart: PlatData[];
-  addToCart: (item: PlatData) => void;
+  addToCart: (item: PlatData) => Promise<Awaited<any>>;
   removeFromCart: (index: number) => void;
   commandes: Commande[];
   addCommande: (commande: Commande) => void;
+  setCart: (cart : PlatData[]) => void;
+  getUserCart: () => void;
+  getUserCommande: () => void
 };
 
 export const CartContext = createContext<CartContextType>({
   cart: [],
-  addToCart: () => {},
+  addToCart: async () => Promise.resolve(),
   removeFromCart: () => {},
   commandes: [],
   addCommande: () => {},
+  setCart: () => {},
+  getUserCart: () => {},
+  getUserCommande: () => {}
 });
 
 type CartProviderProps = {
@@ -36,9 +42,14 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   const [commandes, setCommandes] = useState<Commande[]>([]);
 
   const addToCart = (item: PlatData) => {
-    // Exemple d'appel au service pour ajouter un item au panier
-    addpanier(1, item.id, 1);
-    setCart((prevCart) => [...prevCart, item]);
+    console.log("DISODIJSODIJD")
+    return new Promise((resolve, reject) => {
+      // Exemple d'appel au service pour ajouter un item au panier
+      setCart((prevCart) => [...prevCart, item]);
+      addpanier(1, item.id, 1).then((data) => {
+        resolve(null);
+      });
+    })
   };
 
   const removeFromCart = (index: number) => {
@@ -60,9 +71,64 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     }
   };
 
+  const setCartValues = (cart : PlatData[]) => {
+    setCart(cart)
+  }
+
+  const getUserCart = () => {
+    getAllPanier().then((data : any) => {
+      console.log(data)
+
+      let newCart : PlatData[] = data.map((cartItem : any) => {
+        return {
+          id: cartItem.id,
+          name: cartItem.idPlat.nomPlat,
+          image: cartItem.idPlat.Images,
+          ingredients: cartItem.idPlat.recettes.map((recette : any) => { return recette.idIngredient.nomIngredient }),
+          tempscuisson: cartItem.idPlat.tempsCuisson,
+          prix: cartItem.idPlat.prixUnitaire,
+          description: "",
+        }
+      })
+
+      setCart(newCart)
+    })
+  }
+
+  const getUserCommande = () => {
+    getAllCommande().then((data : any) => {
+      let commandeData : Commande[] = data.map((commandeItem : any) => {
+        return {
+          // id: number;
+          // // Pour chaque ligne de commande, on stocke l'item et sa quantité
+          // items: { item: PlatData; quantity: number }[];
+          // date: Date;
+          id: commandeItem.id,
+          date: new Date(commandeItem.dateCommande),
+          items: commandeItem.detailCommandes.map((dCommandeItem : any) => {
+            return {
+              quantity: dCommandeItem.quantite,
+              item: {
+                id: dCommandeItem.idPlat.id,
+                name: dCommandeItem.idPlat.nomPlat,
+                image: dCommandeItem.idPlat.Images,
+                ingredients: dCommandeItem.idPlat.recettes.map((recette : any) => { return recette.idIngredient.nomIngredient }),
+                tempscuisson: dCommandeItem.idPlat.tempsCuisson,
+                prix: dCommandeItem.idPlat.prixUnitaire,
+                description: "",
+              }
+            }
+          })
+        }
+      })
+
+      setCommandes(commandeData)
+    })
+  }
+
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, commandes, addCommande }}
+      value={{ cart, addToCart, removeFromCart, commandes, addCommande, setCart: setCartValues, getUserCart, getUserCommande }}
     >
       {children}
     </CartContext.Provider>

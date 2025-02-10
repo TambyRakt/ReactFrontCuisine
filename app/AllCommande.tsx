@@ -1,11 +1,15 @@
 // AllCommande.tsx
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
-import Colors from "../config/Color";
-import { CartContext, Commande } from "../context/CardContext";
+import Colors from "../src/config/Color";
+import { CartContext, Commande } from "../src/context/CardContext";
 
 const AllCommande = () => {
-  const { commandes } = useContext(CartContext);
+  const { commandes, getUserCommande } = useContext(CartContext);
+
+  useEffect(() => {
+    getUserCommande()
+  }, [])
 
   const renderCommande = ({ item }: { item: Commande }) => {
     // Calcul du montant total de la commande
